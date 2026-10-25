@@ -49,6 +49,23 @@ The attempt limit is enforced in the visitor's own browser, so someone who downl
 
 Done privately: re-export the data, rebuild with the passphrase, verify the build (decrypt check and plaintext leak check), commit the new `index.html` and push. Devices that remembered the password stay unlocked.
 
+## Running a refresh from Claude web (how-to)
+
+The refresh can be run from Claude Code on the web (claude.ai/code) so it can be triggered from a phone. The private build inputs (source page, data query, scripts) are needed in the session's repository and are not stored here.
+
+**One-time setup**
+
+1. Start a Claude Code web session on the private repository that holds the build inputs. Grant the GitHub app access to that repository **and** to this public one (the session pushes the result here).
+2. In the cloud environment settings add the environment variable `HLS_PW` with the passphrase. Do not type it into the chat or commit it anywhere.
+3. Attach a database connector that can run the data query.
+4. Make sure the environment's network settings allow installing Python packages (the build needs `cryptography`) and reaching GitHub.
+
+**What to tell Claude**
+
+> Update the list. Run the data query in slices, merge the results into the source page, build the locked page with the passphrase from `HLS_PW`, decrypt-check the output, push this repo only if the data changed, then verify the live site. Do not print the passphrase.
+
+**What a good run reports:** the number of streams and the date range, the commit pushed, and that the live site has no readable stream data.
+
 ## Notes
 
 - The streams are served from a private network address, so they only play for viewers who have access to it.
